@@ -1,0 +1,23 @@
+version: "3"
+services:
+  db:
+    image: "mysql:latest"
+    container_name: docker-mysql
+    ports:
+      - "6033:3306"
+    environment:
+      MYSQL_DATABASE: ticketdb
+      MYSQL_ROOT_PASSWORD: root
+
+  webapp:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: ticketapp
+    restart: on-failure
+    ports:
+      - "8082:8082"
+    environment:
+      MYSQL_HOST: docker-mysql
+      MYSQL_DATABASE: ticketdb
+      MYSQL_ROOT_PASSWORD: root
