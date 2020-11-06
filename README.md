@@ -1,4 +1,4 @@
-﻿# SpringBoot-Rest-App-AirlineTicket
+# SpringBoot-Rest-App-AirlineTicket
 
 Technologies: 
 -	Java 8, 
@@ -9,7 +9,8 @@ Technologies:
 -	Restful WebService (Json), 
 -	Swagger, 
 -	Lombok (To avoid boiler plate codes like getter, setter, constructor, toString. etc.),
--	Docker
+-	Docker (Using docker-compose to run the containers)
+
 Back-end services:
 -	Add, remove, update, delete, get, get all airport company
 -	Add, remove, update, delete, get, get all airport
@@ -22,10 +23,38 @@ Back-end services:
 
 Documentation (Swagger):  http://localhost:8082/swagger-ui.html
 
-Request Examples (JSON) :
+#### Commands:
+Both the application and the MySQL database are runned using docker-compose. Before starting the containers you need to package the application into a .jar (only the first time or if you modify the source code).
+~~~bash
+#Package
+SpringBoot-Rest-App-AirlineTicket$ make package
+#Start
+SpringBoot-Rest-App-AirlineTicket$ make up
+#Stop
+SpringBoot-Rest-App-AirlineTicket$ make down
+~~~
+Note that you could need to run the last two commands as superuser depending on Docker configuration.
 
-Create Airport
+#### Commands (without make):
+~~~bash
+#Build the .jar
+SpringBoot-Rest-App-AirlineTicket$ mvn clean
+SpringBoot-Rest-App-AirlineTicket$ mvn package
+
+#Buuild Docker images & run
+SpringBoot-Rest-App-AirlineTicket$ docker-compose up -d --build
+
+#Stop Docker containers
+SpringBoot-Rest-App-AirlineTicket$ docker-compose down
+~~~
+
+
+
+#### Request Examples (JSON) :
+
+###### Create Airport
 Request:
+~~~
 POST: localhost:8082/api/airport
 Body:
 {
@@ -33,8 +62,9 @@ Body:
 	"capacity": 100,
 	"location": "Istanbul-Avrupa"
 }
-
+~~~
 Response:
+~~~
 Status: 200 – OK
 Body:
 {
@@ -45,12 +75,15 @@ Body:
     "departureRoutes": null,
     "arrivalRoutes": null
 }
-
-Get Airport By Id
+~~~
+---
+###### Get Airport By Id
 Request:
+~~~
 GET: localhost:8082/api/airport/1
-
+~~~
 Response:
+~~~
 Status: 200 – OK
 Body:
 {
@@ -62,13 +95,15 @@ Body:
     "arrivalRoutes": [],
     "hibernateLazyInitializer": {}
 }
-
-
-Get All Airports
+~~~
+---
+###### Get All Airports
 Request:
+~~~
 GET: localhost:8082/api/airport
-
+~~~
 Response:
+~~~
 Status: 200 – OK
 Body:
 [
@@ -89,32 +124,14 @@ Body:
         "arrivalRoutes": []
     }
 ]
-
-Delete Airport
+~~~
+---
+###### Delete Airport
 Request:
+~~~
 DELETE: localhost:8082/api/airport/2
-
-Response: 
+~~~
+Response:
+~~~
 Status: 200 – OK
-
-
-Docker Commands:
-Create application .jar file (airline-ticker-jar):
-…\AirlineTicketApp>mvn clean
-…\AirlineTicketApp>mvn package
-Create docker image:
-…\AirlineTicketApp> docker build -f Dockerfile -t airline-ticket .
-List docker images:
-…\AirlineTicketApp> docker images
-	Repository	size
--	airline-ticket	685MB
-
-Create & Run docker image for MySql database:
-…\AirlineTicketApp> docker run -d -p 6033:3306 --name=docker-mysql --env="MYSQL_ROOT_PASSWORD=root" --env="MYSQL_PASSWORD=admin" --env="MYSQL_DATABASE=ticketdb" mysql
-Run image for Airline Ticket application:
-…\AirlineTicketApp> docker run -p 8082:8082 airline-ticket
-…\AirlineTicketApp> docker run –link docker-mysql:mysql -p 8082:8082 airline-ticket
-
-
-Get docker-machine IP
-…\AirlineTicketApp> docker-machine ls
+~~~
